@@ -1,0 +1,11 @@
+.toogleCharButton {
+    background-color: #000;
+    color: #fff;
+    border: none;
+    padding: 5px 15px;
+    margin-bottom: 20px;
+}
+
+.toogleCharButton:hover {
+    opacity: 0.7;
+}

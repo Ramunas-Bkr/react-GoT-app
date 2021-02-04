@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import GotService from '../../services/gotService';
+import ErrorMessage from '../errorMessage/ErrorMessage';
 import Loader from '../loader/loader';
 import './randomChar.css';
 
@@ -13,7 +14,8 @@ export default class RandomChar extends Component {
     gotService = new GotService();
     state = {
         char: {},
-        loading: true
+        loading: true,
+        error: false
     }
 
     onCharLoaded = (char) => {
@@ -23,19 +25,27 @@ export default class RandomChar extends Component {
         })
     }
 
+    onError = (err) => {
+        this.setState({
+            error: true,
+            loading: false
+        })
+    }
+
     updateCharacter() {
-        const id = Math.floor(Math.random() * 1000) + 1;
+        const id = Math.floor(Math.random() * 1000) + 10;
         this.gotService.getCharacter(id)
-            .then(this.onCharLoaded);
+            .then(this.onCharLoaded)
+            .catch(this.onError);
     }
 
     render() {
 
-        const { char, loading } = this.state;
+        const { char, loading, error } = this.state;
 
         return (
             <div className="random-block rounded">
-                {loading ? <Loader /> : <View char={char} />}
+                {error ? <ErrorMessage /> : loading ? <Loader /> : <View char={char} />}
             </div>
         );
     }
