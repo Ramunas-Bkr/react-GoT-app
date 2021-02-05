@@ -6,16 +6,20 @@ import './randomChar.css';
 
 export default class RandomChar extends Component {
 
-    constructor() {
-        super();
-        this.updateCharacter();
-    }
-
     gotService = new GotService();
     state = {
         char: {},
         loading: true,
         error: false
+    }
+
+    componentDidMount() {
+        this.updateCharacter();
+        this.timerId = setInterval(this.updateCharacter, 5000);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.timerId);
     }
 
     onCharLoaded = (char) => {
@@ -32,7 +36,7 @@ export default class RandomChar extends Component {
         })
     }
 
-    updateCharacter() {
+    updateCharacter = () => {
         const id = Math.floor(Math.random() * 1000) + 10;
         this.gotService.getCharacter(id)
             .then(this.onCharLoaded)

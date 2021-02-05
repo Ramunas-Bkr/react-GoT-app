@@ -1,43 +1,58 @@
-import React, { useState } from 'react';
+import React, { Component } from 'react';
 import { Col, Row, Container } from 'reactstrap';
 import Header from '../header';
 import RandomChar from '../randomChar';
-import ItemList from '../itemList';
-import CharDetails from '../charDetails';
 import './app.css';
+import ErrorMessage from '../errorMessage/ErrorMessage';
+import CharacterPage from '../CharacterPage/CharacterPage';
+export default class App extends Component {
 
+    state = {
+        visibleRandomChar: true,
+        error: false
+    }
 
-const App = () => {
+    componentDidCatch() {
+        console.log('Error');
+        this.setState({
+            error: true
+        })
+    }
 
-    const [visibleRandomChar, setVisibleRandomChar] = useState(true)
+    toogleRandomChar = () => {
+        this.setState((state) => {
+            return {
+                visibleRandomChar: !state.visibleRandomChar
+            }
+        })
+    }
 
-    return (
-        <>
-            <Container>
-                <Header />
-            </Container>
-            <Container>
-                <Row>
-                    <Col lg={{ size: 5, offset: 0 }}>
-                        {visibleRandomChar ? <RandomChar /> : null}
-                        <button
-                            className="toogleCharButton"
-                            onClick={() => setVisibleRandomChar(!visibleRandomChar)}>
-                            Toogle random character
+    render() {
+
+        if (this.state.error) {
+            return <ErrorMessage />
+        }
+
+        return (
+            <>
+                <Container>
+                    <Header />
+                </Container>
+                <Container>
+                    <Row>
+                        <Col lg={{ size: 5, offset: 0 }}>
+                            {this.state.visibleRandomChar ? <RandomChar /> : null}
+                            <button
+                                className="toogleCharButton"
+                                onClick={this.toogleRandomChar}>
+                                Toogle random character
                         </button>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col md='6'>
-                        <ItemList />
-                    </Col>
-                    <Col md='6'>
-                        <CharDetails />
-                    </Col>
-                </Row>
-            </Container>
-        </>
-    );
-};
-
-export default App;
+                        </Col>
+                    </Row>
+                    <CharacterPage />
+                    
+                </Container>
+            </>
+        )
+    }
+}

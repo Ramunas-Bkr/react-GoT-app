@@ -3,7 +3,7 @@ export default class GotService {
         this._apiBase = 'https://www.anapioficeandfire.com/api';
     }
 
-    getResource = async (url) => {
+    async getResource(url) {
         const res = await fetch(`${this._apiBase}${url}`);
 
         if (!res.ok) {
