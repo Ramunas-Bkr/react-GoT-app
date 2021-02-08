@@ -1,13 +1,14 @@
 import React from 'react';
-import './ErrorMeassage.css'
+import './errorMessage.css';
+import img from './error.jpg';
 
 const ErrorMessage = () => {
     return (
         <>
-            <img src={process.env.PUBLIC_URL + '/img/error.jpg'} alt="Error_image"></img>
-            <span> Something goes wrong </span>
+            <img src={img} alt='error'></img>
+            <span>Something goes wrong</span>
         </>
     )
 }
 
-export default ErrorMessage
+export default ErrorMessage;

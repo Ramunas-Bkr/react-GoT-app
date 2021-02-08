@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
-import GotService from '../../services/gotService';
-import ErrorMessage from '../errorMessage/ErrorMessage';
-import Loader from '../loader/loader';
+import React, {Component} from 'react';
 import './randomChar.css';
+import gotService from '../../services/gotService';
+import Spinner from '../spinner';
+import ErrorMessage from '../errorMessage';
 
 export default class RandomChar extends Component {
 
-    gotService = new GotService();
+    gotService = new gotService();
     state = {
         char: {},
         loading: true,
@@ -14,11 +14,11 @@ export default class RandomChar extends Component {
     }
 
     componentDidMount() {
-        this.updateCharacter();
-        this.timerId = setInterval(this.updateCharacter, 5000);
+        this.updateChar();
+        this.timerId = setInterval(this.updateChar, 15000);
     }
 
-    componentWillUnmount() {
+    componentWillUnmount(){
         clearInterval(this.timerId);
     }
 
@@ -36,36 +36,35 @@ export default class RandomChar extends Component {
         })
     }
 
-    updateCharacter = () => {
-        const id = Math.floor(Math.random() * 1000) + 10;
+    updateChar = () => {
+        const id = Math.floor(Math.random()*140 + 25); //25-140
         this.gotService.getCharacter(id)
             .then(this.onCharLoaded)
             .catch(this.onError);
     }
 
     render() {
-
         const { char, loading, error } = this.state;
+
+        const errorMessage = error ? <ErrorMessage/> : null;
+        const spinner = loading ? <Spinner/> : null;
+        const content = !(loading || error) ? <View char={char}/> : null;
 
         return (
             <div className="random-block rounded">
-                {error ? <ErrorMessage /> : loading ? <Loader /> : <View char={char} />}
+                {errorMessage}
+                {spinner}
+                {content}
             </div>
         );
     }
 }
-
-const View = ({ char }) => {
-
-    const { name, gender, born, died, culture, aliases } = char
+const View = ({char}) => {
+    const {name, gender, born, died, culture} = char;
     return (
         <>
             <h4>Random Character: {name}</h4>
             <ul className="list-group list-group-flush">
-                <li className="list-group-item d-flex justify-content-between">
-                    <span className="term">Aliases </span>
-                    <span>{aliases}</span>
-                </li>
                 <li className="list-group-item d-flex justify-content-between">
                     <span className="term">Gender </span>
                     <span>{gender}</span>
@@ -86,4 +85,3 @@ const View = ({ char }) => {
         </>
     )
 }
-
